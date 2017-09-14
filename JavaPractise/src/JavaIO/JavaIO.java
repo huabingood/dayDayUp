@@ -1,15 +1,16 @@
 package JavaIO;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 
 public class JavaIO {
     public static void main(String[] args){
         // myOutputStream();
         // myInputStream();
-        integratedApplication();
+        // integratedApplication();
+        // myCharIO();
+        myBuffeerCharStrem();
+
 
     }  // main方法结尾
 
@@ -117,4 +118,91 @@ public class JavaIO {
             }
         }
     }  // 综合应用的结尾
+
+    /**
+     * 字节流
+     * 字节输出流构造：
+     * FileWriter(string str)
+     * FileWriter(file f)
+     * 
+     * 方法
+     * write(chars[],0,int length)
+     *
+     * 字节输入流构造：
+     * FileReader(string str)
+     * FileReader(File f)
+     *
+     * 方法
+     * 注意，这里是没有readLine() 方法的
+     * int read(char[])     // 如果读到结尾，就返回-1
+     *
+     * 注意：这里没办法使用
+     */
+    public static void myCharIO(){
+        String inputPath = "D:\\【学            习】\\hyw.txt";
+        String outputPath = "D:\\【学            习】\\huabingood.txt";
+
+        FileWriter fw = null;
+        FileReader fr = null;
+
+        try {
+            // 注意这里是不能设置编码方式的。如果是英文还好，中文的话有可能会出问题
+            fw = new FileWriter(outputPath,true);
+            fr = new FileReader(inputPath);
+            char[] chars = new char[1024*1024];
+            int len = 0;
+             while((len = fr.read(chars)) !=-1){
+                 fw.write(chars,0,len);
+             }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                fw.close();
+                fr.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    } // myCharIO() 结尾
+
+
+    /**
+     * 字节输入流
+     */
+    public static void myBuffeerCharStrem(){
+        String inputPath = "D:\\【学            习】\\hyw.txt";
+
+        BufferedReader br = null;
+
+        try {
+            // 下面这种写方法不建议，因为这种写法不发指定编码方式
+
+            br = new BufferedReader(new FileReader(inputPath));
+
+            String line = null;
+            while ((line=br.readLine())!=null){
+                // 没法发，这个字节流创建字符流的编码方式太烦了，只能在输出字符串时手工转一下
+                // Charset.defaultCharset() 表示获取系统的编码方式
+                String newLine = new String(line.getBytes(Charset.defaultCharset()));
+                System.out.println();
+                // System.out.println("杨华彬");
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    } // myBuffeerCharStrem() 结尾
+
 }
