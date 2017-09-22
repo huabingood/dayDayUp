@@ -60,3 +60,5 @@ function alterParameters(){
 checkResult
 rerunData
 alterParameters
+
+# this is test the github merge and pull
