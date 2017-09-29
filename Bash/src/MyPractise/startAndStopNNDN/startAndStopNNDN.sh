@@ -40,4 +40,3 @@ case ${input} in
     exit
     ;;
 esac
-

@@ -1,14 +1,13 @@
 package hadoop.hdfs;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -29,16 +28,17 @@ public class HDFSIO {
     public void init(){
         conf = new Configuration();
         // 指定HDFS路径的方法一
-        /*conf.set("fs.defaultFS","hdfs://huabingood01:9000");
+        conf.set("fs.defaultFS","hdfs://huabingood01:9000");
+        conf.set("fs.hdfs.impl","org.apache.hadoop.hdfs.DistributedFileSystem");
 
         try {
             fs = FileSystem.get(conf);
         } catch (IOException e) {
             e.printStackTrace();
-        }*/
+        }
 
         // 指定hdfs路径的方法二
-        try {
+        /*try {
             fs = FileSystem.get(new URI("hdfs://huabingood01:9000"),conf,"hadoop");
         } catch (IOException e) {
             e.printStackTrace();
@@ -46,7 +46,7 @@ public class HDFSIO {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
 
 
     }
@@ -70,9 +70,9 @@ public class HDFSIO {
      */
     @Test
     public void testMkdir(){
-        Path path = new Path("/hyw/huabingood");
+        //Path path = new Path("/hyw/huabingood");
         try {
-            boolean b = fs.mkdirs(path);
+            boolean b = fs.mkdirs(new Path("/huabingood"));
             if(b){
                 System.out.println("创建成功！");
             } else{
@@ -80,6 +80,14 @@ public class HDFSIO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testLsHDFS() throws Exception {
+        FileStatus[] listStatus = fs.listStatus(new Path("/"));
+        for (FileStatus fileStatus : listStatus) {
+            System.out.println(fileStatus);
         }
     }
 
