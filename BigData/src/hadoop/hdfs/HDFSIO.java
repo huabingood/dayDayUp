@@ -39,7 +39,7 @@ public class HDFSIO {
     @Test
     public void testConfiguration(){
         Iterator<Map.Entry<String,String>> it = conf.iterator();
-        if(it.hasNext()){
+        while (it.hasNext()){
             Map.Entry<String,String> entry = it.next();
             System.out.println(entry.getKey() +" : " + entry.getValue());
         }
