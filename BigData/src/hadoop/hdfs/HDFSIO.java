@@ -83,6 +83,26 @@ public class HDFSIO {
         }
     }
 
+    /**
+     *
+     */
+    @Test
+    public void testCopy2Local(){
+        Path hdfsPath = new Path("/hyw/test/hadoop-2.6.0-cdh5.10.0.tar.gz");
+        Path localPath = new Path("/home/huabingood/Downloads");
+        try {
+            fs.copyToLocalFile(hdfsPath,localPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                fs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     @Test
     public void testLsHDFS() throws Exception {
         FileStatus[] listStatus = fs.listStatus(new Path("/"));
