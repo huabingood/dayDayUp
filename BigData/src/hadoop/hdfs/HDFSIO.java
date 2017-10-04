@@ -72,7 +72,7 @@ public class HDFSIO {
     public void testMkdir(){
         //Path path = new Path("/hyw/huabingood");
         try {
-            boolean b = fs.mkdirs(new Path("/huabingood"));
+            boolean b = fs.mkdirs(new Path("/huabingood/abc"));
             if(b){
                 System.out.println("创建成功！");
             } else{
