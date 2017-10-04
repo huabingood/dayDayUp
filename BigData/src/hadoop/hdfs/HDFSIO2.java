@@ -5,6 +5,7 @@ import org.apache.hadoop.fs.*;
 import java.io.IOException;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
@@ -103,7 +104,7 @@ public class HDFSIO2 {
     public boolean myDropHdfsPath(FileSystem fs){
         boolean b = false;
         // drop the last path
-        Path path = new Path("/hyw/test/huabingood");
+        Path path = new Path("/huabingood/hadoop.tar.gz");
         try {
             b = fs.delete(path,true);
         } catch (IOException e) {
@@ -162,13 +163,13 @@ public class HDFSIO2 {
 
     public Set<String> recursiveHdfsPath(FileSystem hdfs,Path listPath){
 
-        FileStatus[] files = null;
+        /*FileStatus[] files = null;
         try {
             files = hdfs.listStatus(listPath);
             Path[] paths = FileUtil.stat2Paths(files);
             for(int i=0;i<files.length;i++){
                 if(files[i].isFile()){
-                    // Path p = FileUtil.stat2Paths(f);
+                    // set.add(paths[i].toString());
                     set.add(paths[i].getName());
                 }else {
 
@@ -178,12 +179,90 @@ public class HDFSIO2 {
         } catch (IOException e) {
             e.printStackTrace();
             logger.error(e);
+        }*/
+
+        FileStatus[] files = null;
+
+        try {
+            files = hdfs.listStatus(listPath);
+            if(files.length == 0){
+                set.add(listPath.toUri().getPath());
+            }else {
+                for (FileStatus f : files) {
+                    if (files.length == 0 || f.isFile()) {
+                        set.add(f.getPath().toUri().getPath());
+                    } else {
+                        recursiveHdfsPath(hdfs, f.getPath());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e);
         }
+
 
         return set;
     }
 
+    // rename the path
+    public boolean myRename(FileSystem hdfs){
+        boolean b = false;
+        Path oldPath = new Path("/hyw/test/huabingood");
+        Path newPath = new Path("/hyw/test/huabing");
 
+        try {
+            b = hdfs.rename(oldPath,newPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            try {
+                hdfs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                logger.error(e);
+            }
+        }
+
+        return b;
+    }
+
+
+    // use java IO copy the file from one HDFS path to another
+    public void copyFileBetweenHDFS(FileSystem hdfs){
+        Path inPath = new Path("/hyw/test/hadoop-2.6.0-cdh5.10.0.tar.gz");
+        Path outPath = new Path("/huabingood/hadoop.tar.gz");
+
+        byte[] ioBuffer = new byte[1024*1024*64];
+        int len = 0;
+
+        FSDataInputStream hdfsIn = null;
+        FSDataOutputStream hdfsOut = null;
+
+        try {
+            hdfsIn = hdfs.open(inPath);
+            hdfsOut = hdfs.create(outPath);
+
+            IOUtils.copyBytes(hdfsIn,hdfsOut,1024*1024*64,false);
+
+            /*while((len=hdfsIn.read(ioBuffer))!= -1){
+                IOUtils.copyBytes(hdfsIn,hdfsOut,len,true);
+            }*/
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.error(e);
+        }finally {
+            try {
+            hdfsOut.close();
+            hdfsIn.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
     // get and put
     public void getFileFromHDFS(FileSystem fs){
@@ -256,10 +335,15 @@ public class HDFSIO2 {
         if(iterator.hasNext()){
             System.out.println(iterator.next());
         }*/
-        Set<String> set = hdfs.recursiveHdfsPath(fs,new Path("/"));
+
+        /*Set<String> set = hdfs.recursiveHdfsPath(fs,new Path("/"));
         for(String path:set){
             System.out.println(path);
-        }
+        }*/
+
+        // System.out.println(hdfs.myRename(fs));
+
+        hdfs.copyFileBetweenHDFS(fs);
     }
 
 
