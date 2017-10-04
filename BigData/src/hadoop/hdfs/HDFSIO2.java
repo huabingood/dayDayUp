@@ -96,13 +96,16 @@ public class HDFSIO2 {
             logger.error(e);
         }*/
 
-
-
-
         return fs;
     }
 
-
+    /**
+     * 获取配置的所有信息
+     * 首先，我们要知道配置文件是哪一个
+     * 然后我们将获取的配置文件用迭代器接收
+     * 实际上配置中是KV对，我们可以通过java中的Entry来接收
+     *
+     */
     public void showAllConf(){
         Configuration conf = new Configuration();
         conf.set("fs.defaultFS", "hdfs://huabingood01:9000");
@@ -114,7 +117,13 @@ public class HDFSIO2 {
     }
 
 
-    // create path
+    /**
+     * 创建文件夹
+     * 这里的创建文件夹同shell中的mkdir -p 语序前面的文件夹不存在
+     * 跟java中的IO操作一样，也只能对path对象做操作；但是这里的Path对象是hdfs中的
+     * @param fs
+     * @return
+     */
     public boolean myCreatePath(FileSystem fs){
         boolean b = false;
 
@@ -136,7 +145,15 @@ public class HDFSIO2 {
         return b;
     }
 
-    // drop path
+    /**
+     * 删除文件
+     * 实际上删除的是给定path路径的最后一个
+     * 跟java中一样，也需要path对象，不过是hadoop.fs包中的。
+     * 实际上delete(Path p)已经过时了，更多使用delete(Path p,boolean recursive)
+     * 后面的布尔值实际上是对文件的删除，相当于rm -r
+     * @param fs
+     * @return
+     */
     public boolean myDropHdfsPath(FileSystem fs){
         boolean b = false;
         // drop the last path
@@ -158,7 +175,13 @@ public class HDFSIO2 {
         return b;
     }
 
-    // query
+    /**
+     * 文件简单的判断
+     * 是否存在
+     * 是否是文件夹
+     * 是否是文件
+     * @param fs
+     */
     public void myCheck(FileSystem fs){
         boolean isExists = false;
         boolean isDirectorys = false;
@@ -197,6 +220,17 @@ public class HDFSIO2 {
 
     }
 
+    /**
+     * 遍历文件夹
+     * public FileStatus[] listStatus(Path p)
+     * 通常使用HDFS文件系统的listStatus(path)来获取改定路径的子路径。然后逐个判断
+     * 值得注意的是：
+     *  1.并不是总有文件夹中有文件，有些文件夹是空的，如果仅仅做是否为文件的判断会有问题，必须加文件的长度是否为0的判断
+     *  2.使用getPath()方法获取的是FileStatus对象是带URL路径的。使用FileStatus.getPath().toUri().getPath()获取的路径才是不带url的路径
+     * @param hdfs
+     * @param listPath 传入的HDFS开始遍历的路径
+     * @return
+     */
     public Set<String> recursiveHdfsPath(FileSystem hdfs,Path listPath){
 
         /*FileStatus[] files = null;
@@ -221,13 +255,17 @@ public class HDFSIO2 {
 
         try {
             files = hdfs.listStatus(listPath);
+            // 实际上并不是每个文件夹都会有文件的。
             if(files.length == 0){
+                // 如果不使用toUri()，获取的路径带URL。
                 set.add(listPath.toUri().getPath());
             }else {
+                // 判断是否为文件
                 for (FileStatus f : files) {
                     if (files.length == 0 || f.isFile()) {
                         set.add(f.getPath().toUri().getPath());
                     } else {
+                        // 是文件夹，且非空，就继续遍历
                         recursiveHdfsPath(hdfs, f.getPath());
                     }
                 }
@@ -241,7 +279,11 @@ public class HDFSIO2 {
         return set;
     }
 
-    // rename the path
+    /**
+     * 重命名文件夹
+     * @param hdfs
+     * @return
+     */
     public boolean myRename(FileSystem hdfs){
         boolean b = false;
         Path oldPath = new Path("/hyw/test/huabingood");
@@ -265,13 +307,22 @@ public class HDFSIO2 {
     }
 
 
-    // use java IO copy the file from one HDFS path to another
+    /**
+     * hdfs之间文件的复制
+     * 使用FSDataInputStream来打开文件open(Path p)
+     * 使用FSDataOutputStream开创建写到的路径create(Path p)
+     * 使用 IOUtils.copyBytes(FSDataInputStream,FSDataOutputStream,int buffer,Boolean isClose)来进行具体的读写
+     * 说明：
+     *  1.java中使用缓冲区来加速读取文件，这里也使用了缓冲区，但是只要指定缓冲区大小即可，不必单独设置一个新的数组来接受
+     *  2.最后一个布尔值表示是否使用完后关闭读写流。通常是false，如果不手动关会报错的
+     * @param hdfs
+     */
     public void copyFileBetweenHDFS(FileSystem hdfs){
         Path inPath = new Path("/hyw/test/hadoop-2.6.0-cdh5.10.0.tar.gz");
         Path outPath = new Path("/huabin/hadoop.tar.gz");
 
-        byte[] ioBuffer = new byte[1024*1024*64];
-        int len = 0;
+        // byte[] ioBuffer = new byte[1024*1024*64];
+        // int len = 0;
 
         FSDataInputStream hdfsIn = null;
         FSDataOutputStream hdfsOut = null;
@@ -300,7 +351,13 @@ public class HDFSIO2 {
 
     }
 
-    // get and put
+    /**
+     * 文件下载
+     * 注意下载的路径的最后一个地址是下载的文件名
+     * copyToLocalFile(Path local,Path hdfs)
+     * 下载命令中的参数是没有任何布尔值的，如果添加了布尔是，意味着这是moveToLocalFile()
+     * @param fs
+     */
     public void getFileFromHDFS(FileSystem fs){
         Path HDFSPath = new Path("/hyw/test/hadoop-2.6.0-cdh5.10.0.tar.gz");
         Path localPath = new Path("/home/huabingood");
@@ -315,40 +372,36 @@ public class HDFSIO2 {
                 fs.close();
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.error("zhe li you cuo wu !" ,e);
-            }finally {
-                try {
-                    fs.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    logger.error(e);
-                }
+                logger.error("zhe li you cuo wu !", e);
             }
         }
     }
 
+    /**
+     * 文件的下载
+     * 注意事项同文件的上传
+     * 注意如果上传的路径不存在会自动创建
+     * 如果存在同名的文件，会覆盖
+     * @param fs
+     */
     public void myPutFile2HDFS(FileSystem fs){
 
         boolean pathExists = false;
-        // it can create path
-        // the last path is the file name
+        // 如果上传的路径不存在会创建
+        // 如果该路径文件已存在，就会覆盖
         Path localPath = new Path("/home/huabingood/绣春刀.rmbv");
         Path hdfsPath = new Path("/hyw/test/huabingood/abc/efg/绣春刀.rmbv");
-
-        /*try {
-            b = fs.exists(hdfsPath);
-            if(!b){
-                logger.error("path not exists!");
-                System.exit(1);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
 
         try {
             fs.copyFromLocalFile(localPath,hdfsPath);
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                fs.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
