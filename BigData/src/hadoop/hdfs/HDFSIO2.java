@@ -19,8 +19,8 @@ import java.util.Set;
 
 public class HDFSIO2 {
 
-    private static Logger logger = Logger.getLogger("file");
-    private static Set<String> set = new HashSet<String>();
+    private Logger logger = Logger.getLogger("file");
+    private Set<String> set = new HashSet<String>();
 
     public FileSystem getHadoopFileSystem() {
 
@@ -336,14 +336,14 @@ public class HDFSIO2 {
             System.out.println(iterator.next());
         }*/
 
-        /*Set<String> set = hdfs.recursiveHdfsPath(fs,new Path("/"));
+        Set<String> set = hdfs.recursiveHdfsPath(fs,new Path("/"));
         for(String path:set){
             System.out.println(path);
-        }*/
+        }
 
         // System.out.println(hdfs.myRename(fs));
 
-        hdfs.copyFileBetweenHDFS(fs);
+        // hdfs.copyFileBetweenHDFS(fs);
     }
 
 
