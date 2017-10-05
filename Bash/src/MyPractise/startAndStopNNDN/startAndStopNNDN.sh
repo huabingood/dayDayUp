@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# this is ENV
+SBIN_HOME=/opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin
 
 # insersting this prompt information can't display in the IDEA but use CLI and the echo .
 # read -p 'start or stop? 1 is start; 2 is stop;please:' input
@@ -19,21 +21,48 @@ function isCommandRunRight(){
     fi
 }
 
+function start_all(){
+    echo -e "\033[34m start the HDFS. \033[0m"
+    bash ${SBIN_HOME}/hadoop-daemon.sh start namenode
+    bash ${SBIN_HOME}/hadoop-daemon.sh start datanode
+
+    echo -e "\033[34m start the yarn. \033[0m"
+    bash ${SBIN_HOME}/yarn-daemon.sh start resourcemanager
+    bash ${SBIN_HOME}/yarn-daemon.sh start nodemanager
+
+    echo -e "\033[34m start the jobHistory. \033[0m"
+    bash ${SBIN_HOME}/mr-jobhistory-daemon.sh start historyserver
+
+    echo -e "\033[34m this is PID. \033[0m"
+    jps
+}
+
+function stop_all(){
+    echo -e "\033[34m stop the jobHistory. \033[0m"
+    bash ${SBIN_HOME}/mr-jobhistory-daemon.sh stop historyserver
+
+    echo -e "\033[34m stop the yarn. \033[0m"
+    bash ${SBIN_HOME}/yarn-daemon.sh stop nodemanager
+    bash ${SBIN_HOME}/yarn-daemon.sh stop resourcemanager
+
+    echo -e "\033[34m stop the HDFS. \033[0m"
+    bash ${SBIN_HOME}/hadoop-daemon.sh stop datanode
+    bash ${SBIN_HOME}/hadoop-daemon.sh stop namenode
+
+    echo -e "\033[34m this is PID. \033[0m"
+    jps
+}
+
+
+
+
 # run command
 case ${input} in
     1)
-    echo "You choose start the NN and DN."
-    bash /opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin/hadoop-daemon.sh start namenode
-    # isCommandRunRight $? NN start
-    bash /opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin/hadoop-daemon.sh start datanode
-    # isCommandRunRight $? DN start
+    start_all
     ;;
     2)
-    echo "You choose stop the NN and DN."
-    bash /opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin/hadoop-daemon.sh stop datanode
-    # isCommandRunRight $? DN stop
-    bash /opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin/hadoop-daemon.sh stop namenode
-    # isCommandRunRight $? NN stop
+    stop_all
     ;;
     *)
     echo "You give me the error input information."
