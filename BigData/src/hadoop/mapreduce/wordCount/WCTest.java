@@ -19,7 +19,7 @@ public class WCTest {
         conf.set("fs.defaultFS", "hdfs://huabingood01:9000");
 
         Path inPath = new Path("/hyw/inPath/test.txt");
-        Path outPath = new Path("/hyw/outPath/path01");
+        Path outPath = new Path("/hyw/outPath/path05");
         try {
             Job job = Job.getInstance(conf);
             job.setJarByClass(WCTest.class);
@@ -51,9 +51,6 @@ public class WCTest {
             e.printStackTrace();
             logger.error(e);
         }
-
-
-
 
     }
 }
