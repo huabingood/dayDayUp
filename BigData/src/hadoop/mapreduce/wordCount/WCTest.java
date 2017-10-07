@@ -12,6 +12,11 @@ import org.apache.log4j.Logger;
 
 import java.io.IOException;
 
+/**
+ * 运行MR程序的主类
+ * 注意：如果在IDEA中运行在yarn界面是没有任何输出的，只有打成jar包运行在yarn界面才有输出
+ *
+ */
 public class WCTest {
     public static void main(String[] args){
         Logger logger = Logger.getLogger("file");
@@ -19,7 +24,7 @@ public class WCTest {
         conf.set("fs.defaultFS", "hdfs://huabingood01:9000");
 
         Path inPath = new Path("/hyw/inPath/test.txt");
-        Path outPath = new Path("/hyw/outPath/path01");
+        Path outPath = new Path("/hyw/outPath/path05");
         try {
             Job job = Job.getInstance(conf);
             job.setJarByClass(WCTest.class);
@@ -37,9 +42,10 @@ public class WCTest {
             FileOutputFormat.setOutputPath(job,outPath);
 
 
-            boolean result = job.waitForCompletion(true);
+            job.submit();
+            /*boolean result = job.waitForCompletion(true);
 
-            System.exit(result?0:1);
+            System.exit(result?0:1);*/
 
         } catch (IOException e) {
             e.printStackTrace();
