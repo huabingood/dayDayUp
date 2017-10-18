@@ -40,7 +40,7 @@ public class WCTest {
 
         // 设置文件的输入输出路径
         Path inPath = new Path("/hyw/inPath/test.txt");
-        Path outPath = new Path("/hyw/outPath/path05");
+        Path outPath = new Path("/hyw/outPath/path08");
         try {
             // 生成job
             Job job = Job.getInstance(conf);
