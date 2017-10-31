@@ -1,8 +1,8 @@
 #!/bin/bash
 
-INSTALL_PATH="/opt/hadoop"  # 请输入安装hadoop的绝对路径。改路径下应该没有内容！
+INSTALL_PATH="/opt/hadoop/pseudoDistributeHadoop"  # 请输入安装hadoop的绝对路径。改路径下应该没有内容！
 # mysql的配置情况
-mysqlIP="192.168.130.100"
+mysqlIP="192.168.11.101"
 mysqlPort="3306"
 mysqlDatabase="hive_test"
 mysqlUser="root"
@@ -17,7 +17,7 @@ HADOOP_PROFILEPATH="/etc/hadoop"
 HADOOP_TMP_DIR="${INSTALL_PATH}/tmp/hadoop"
 HIVE_TMP_DIR="${INSTALL_PATH}/tmp/hive"
 # 这里存放自己的JAVA_HOME
-MY_JAVA_HOME="/opt/software/jdk1.8.0_131"
+MY_JAVA_HOME="/opt/softWare/jdk1.8.0_152"
 # 需要往一下文件中修改其中的JAVA_HOME
 myArray=("hadoop-env.sh" "mapred-env.sh" "yarn-env.sh")
 
