@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class Test {
     // 这个是添加的注释
     public static void main(String[] args) {
@@ -13,5 +15,21 @@ public class Test {
 
         System.out.println(x1);
         System.out.println(x2);
+
+        System.out.println("-----------------------");
+
+        HashMap map = new HashMap();
+        int n = 1000000;
+        long start = System.currentTimeMillis();
+        for(int i = 0;i < n;i ++) {
+            new HashMap();
+        }
+        System.out.println(System.currentTimeMillis() - start);
+
+        start = System.currentTimeMillis();
+        for(int i = 0;i < n;i ++) {
+            map.clone();
+        }
+        System.out.println(System.currentTimeMillis() - start);
     }
 }
