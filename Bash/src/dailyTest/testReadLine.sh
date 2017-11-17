@@ -41,6 +41,14 @@ function c(){
         echo $i
     done
 }
-c
+# c
 
 
+filePath="/home/huabingood/middle.txt"
+
+function d() {
+    if [ ! -s "${filePath}" ];then
+        echo "aaaaa"
+    fi
+}
+d
