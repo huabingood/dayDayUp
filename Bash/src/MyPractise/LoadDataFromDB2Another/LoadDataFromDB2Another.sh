@@ -29,7 +29,8 @@ toCmd="load data local infile '${middlePath}' replace into table ${toTable};"
 
 ## 执行来源数据库相关的内容
 function executeFromCmd(){
-    mysql -u ${fromUser} -h ${fromHost} -P ${fromPort} -D ${fromDB} -p${fromPassword} -e "$1"
+    # 在调用mysql输出是，使用-N命令会使导出的数据不输出表头
+    mysql -u ${fromUser} -h ${fromHost} -P ${fromPort} -D ${fromDB} -p${fromPassword} -N -e "$1"
 }
 
 ## 执行mysql语句，下载数据，如果执行成功，就清空数据表
