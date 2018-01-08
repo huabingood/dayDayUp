@@ -17,6 +17,13 @@ show databases;
 # 方式二
 show databases like 't.*';
 
+## 显示数据库中所有的表
+show tables;
+# 显示自定数据库的表
+show tables in database_name;
+# 模糊查询表名
+show tables 'abc*';
+
 ## 详细显示数据库的信息
 desc database database_name;
 # 使用extended字段，可以显示更多的信息
