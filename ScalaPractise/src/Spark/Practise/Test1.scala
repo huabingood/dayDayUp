@@ -14,7 +14,7 @@ object Test1 {
 
     sc.textFile(a).
       flatMap(_.split(',')).map((_,1)).reduceByKey(_+_,1)
-      .foreach(println(_))
+      .collect()
 
 
 
