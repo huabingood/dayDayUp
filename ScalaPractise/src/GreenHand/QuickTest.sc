@@ -21,3 +21,5 @@ val fileName = files.map(_.getName);
 fileName.foreach(println(_));
 
 // 带
+
+val a1=10
