@@ -7,6 +7,7 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="scala-sdk-2.12.4" level="project" />
+    <orderEntry type="library" name="sparkJars" level="project" />
+    <orderEntry type="library" name="scala-sdk-2.11.8" level="project" />
   </component>
 </module>

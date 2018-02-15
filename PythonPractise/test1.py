@@ -1,5 +1,5 @@
 
-str="1,2,3,4,123.456789E4"
+str="1,2,3,4,123.45678999999E10"
 my_tuple=str.split(",")
 my_str=""
 for i in range(len(my_tuple)):

@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 public class FromScientificNotation2Num {
 
     public static void main(String[] args) throws Exception{
-        BufferedReader br = new BufferedReader(new FileReader("/home/huabingood/read.txt"));
-        BufferedWriter bw = new BufferedWriter(new FileWriter("/home/huabingood/write.txt"));
+        BufferedReader br = new BufferedReader(new FileReader(args[0]));
+        BufferedWriter bw = new BufferedWriter(new FileWriter(args[1]));
 
         String line = null;
 
