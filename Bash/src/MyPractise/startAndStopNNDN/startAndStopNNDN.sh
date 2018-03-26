@@ -34,8 +34,6 @@ function start_all(){
     echo -e "\033[34m start the jobHistory. \033[0m"
     bash ${SBIN_HOME}/mr-jobhistory-daemon.sh start historyserver
 
-    echo -e "\033[34m this is PID. \033[0m"
-    jps
 }
 
 function stop_all(){
@@ -50,8 +48,7 @@ function stop_all(){
     bash ${SBIN_HOME}/hadoop-daemon.sh stop datanode
     bash ${SBIN_HOME}/hadoop-daemon.sh stop namenode
 
-    echo -e "\033[34m this is PID. \033[0m"
-    jps
+
 }
 
 # 启动spark
@@ -66,15 +63,23 @@ function stop_spark(){
     bash ${SPARK_SBIN_HOME}/stop-all.sh
 }
 
+# show pid
+function show_pid(){
+    echo -e "\033[34m this is PID. \033[0m"
+    jps
+}
+
 # run command
 case ${input} in
     1)
-    start_spark
     start_all
+    start_spark
+    show_pid
     ;;
     2)
     stop_spark
     stop_all
+    show_pid
     ;;
     *)
     echo "You give me the error input information."
