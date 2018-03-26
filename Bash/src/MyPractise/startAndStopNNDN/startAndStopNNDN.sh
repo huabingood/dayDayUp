@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # this is ENV
-SBIN_HOME=/opt/huabingood/pseudoDistributeHadoop/hadoop-2.6.0-cdh5.10.0/sbin
+SBIN_HOME=/d/bigData/pseudoDistributed/hadoop-2.6.0-cdh5.14.0/sbin
+SPARK_SBIN_HOME=/d/bigData/pseudoDistributed/spark-2.2.0-bin-hadoop2.6/sbin
 
 # insersting this prompt information can't display in the IDEA but use CLI and the echo .
 # read -p 'start or stop? 1 is start; 2 is stop;please:' input
@@ -53,15 +54,26 @@ function stop_all(){
     jps
 }
 
+# 启动spark
+function start_spark(){
+    echo -e "\033[34m start the Spark. \033[0m"
+    bash ${SPARK_SBIN_HOME}/start-all.sh
+}
 
-
+# 关闭spark
+function stop_spark(){
+    echo -e "\033[34m stop the Spark. \033[0m"
+    bash ${SPARK_SBIN_HOME}/stop-all.sh
+}
 
 # run command
 case ${input} in
     1)
+    start_spark
     start_all
     ;;
     2)
+    stop_spark
     stop_all
     ;;
     *)
