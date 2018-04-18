@@ -36,7 +36,6 @@ public class WCMapper extends Mapper<LongWritable,Text,Text,IntWritable> {
         String line = value.toString();
         // 将改行的内容按空格切分为一个个单词
         String[] words = line.split(" ");
-
         // 采用<单词，1>的形式，将改行的所有单词都写进传给reducer的数据结构中
         for(String word:words){
             // 注意hadoop数据类型和java数据类型的转换

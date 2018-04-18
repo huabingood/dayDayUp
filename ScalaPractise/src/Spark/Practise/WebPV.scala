@@ -11,7 +11,7 @@ object WebPV {
 
     // 为什么flatMap和map差别这么大
     // 理论上将flatMap返回的是一个list而map可以返回各种情况的list嵌套list
-    val rdd1 = sc.textFile("/home/huabingood/itcast.log").map(_.split("\t")(1))
+    val rdd1 = sc.textFile("/home/yhb/practise/itcast.log").map(_.split("\t")(1))
     //val rdd1 = sc.textFile("/mnt/huabingood/itcast.log").flatMap(_.split("\t")(1))
 
     // 将函数置换成（K ,1）的形式

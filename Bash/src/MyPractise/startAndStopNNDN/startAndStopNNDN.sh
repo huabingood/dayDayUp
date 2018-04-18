@@ -3,6 +3,7 @@
 # this is ENV
 SBIN_HOME=/d/bigData/pseudoDistributed/hadoop-2.6.0-cdh5.14.0/sbin
 SPARK_SBIN_HOME=/d/bigData/pseudoDistributed/spark-2.2.0-bin-hadoop2.6/sbin
+HBASE_SBIN_HOME=/d/bigData/pseudoDistributed/hbase-1.2.0-cdh5.14.0/bin
 
 # insersting this prompt information can't display in the IDEA but use CLI and the echo .
 # read -p 'start or stop? 1 is start; 2 is stop;please:' input
@@ -63,6 +64,17 @@ function stop_spark(){
     bash ${SPARK_SBIN_HOME}/stop-all.sh
 }
 
+# 启动HBase
+function start_hbase(){
+    echo -e "\033[34m start the HBase. \033[0m"
+    ${HBASE_SBIN_HOME}/start-hbase.sh
+}
+# 关闭HBase
+function stop_hbase(){
+    echo -e "\033[34m stop the HBase. \033[0m"
+    ${HBASE_SBIN_HOME}/stop-hbase.sh
+}
+
 # show pid
 function show_pid(){
     echo -e "\033[34m this is PID. \033[0m"
@@ -74,9 +86,11 @@ case ${input} in
     1)
     start_all
     start_spark
+    start_hbase
     show_pid
     ;;
     2)
+    stop_hbase
     stop_spark
     stop_all
     show_pid
