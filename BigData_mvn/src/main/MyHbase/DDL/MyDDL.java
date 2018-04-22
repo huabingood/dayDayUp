@@ -9,8 +9,17 @@ import org.apache.log4j.PropertyConfigurator;
 
 import java.io.IOException;
 
+/**
+ * 实现表的创建，删除等基本功能
+ * 基于HBase1.2.0API
+ * DDL
+ * @author huabingood@qq.com
+ */
 public class MyDDL {
-
+    /**
+     * 记录日志
+     * 但是好像每个类都要写这么一句，但是不知道怎么改进
+     */
     private static Log myLog = LogFactory.getLog(MyDDL.class);
     static {
         PropertyConfigurator.configure("/home/yhb/coding/dayDayUp/BigData_mvn/conf/log4j.properties");
@@ -41,13 +50,18 @@ public class MyDDL {
     }
 
 
+    /**
+     * 创建hbase中的表
+     * 步骤：获取admin管理器；判断表是否存在；获取表的描述器；添加表的描述（列簇，属性）；创建表；关闭admin管理器
+     * 创建成功返回 true
+     * @return false
+     */
     public static boolean myCreateTable(){
         boolean f = false;
         Admin admin = null;
         String tableName = "image1_test";
         String columnFamily1 = "cf1";
         String columnFamily2 = "cf2";
-
 
         try {
             // 创建habse管理器，由其专门处理DDL类的语言。
@@ -77,6 +91,7 @@ public class MyDDL {
             e.printStackTrace();
         }finally {
             try {
+                // 关掉表管理器
                 admin.close();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -84,5 +99,28 @@ public class MyDDL {
         }
         return f;
     }
+
+
+    public boolean myDeleteTable(){
+        boolean b = false;
+        Admin admin = null;
+        TableName tableName = TableName.valueOf("image1_test");
+
+        try {
+            // 跟HBase shell一样，需要先禁用表，然后再删除表
+            admin = connection.getAdmin();
+            admin.disableTable(tableName);
+            admin.deleteTable(tableName);
+            b = true;
+            myLog.info("删除表成功。");
+        } catch (IOException e) {
+            e.printStackTrace();
+            myLog.error("删除表失败");
+        }
+
+        return b;
+    }
+
+
 
 }

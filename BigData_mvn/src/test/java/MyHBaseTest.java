@@ -11,13 +11,17 @@ import static org.junit.Assert.assertEquals;
  */
 public class MyHBaseTest {
 
-    private static Log log = LogFactory.getLog("日志采集1：");
 
     @Test
     public void createTableTest(){
         boolean b = new MyDDL().myCreateTable();
         assertEquals(true,b);
-        log.error("失败");
+    }
+
+    @Test
+    public void  myDeleteTableTest(){
+        boolean b = new MyDDL().myDeleteTable();
+        assertEquals(true,b);
     }
 
 }
