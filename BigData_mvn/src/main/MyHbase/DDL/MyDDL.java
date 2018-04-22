@@ -1,17 +1,22 @@
 package DDL;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
-import org.apache.hadoop.hbase.client.HTable;
-import org.apache.hadoop.hbase.util.Bytes;
-import org.junit.Test;
+import org.apache.hadoop.hbase.client.*;
+import org.apache.log4j.PropertyConfigurator;
 
 import java.io.IOException;
 
 public class MyDDL {
+
+    private static Log myLog = LogFactory.getLog(MyDDL.class);
+    static {
+        PropertyConfigurator.configure("/home/yhb/coding/dayDayUp/BigData_mvn/conf/log4j.properties");
+    }
+
+
     private static Configuration conf = null;
     private static Connection connection = null;
     private HTable hTable = null;
@@ -38,28 +43,29 @@ public class MyDDL {
 
     public static boolean myCreateTable(){
         boolean f = false;
-        HBaseAdmin hBaseAdmin = null;
+        Admin admin = null;
         String tableName = "image1_test";
         String columnFamily1 = "cf1";
         String columnFamily2 = "cf2";
 
 
-        byte[] bytes = Bytes.toBytes(tableName);
-
         try {
-            // 创建habse管理器，由其专门处理DDL类的语言
-            hBaseAdmin = new HBaseAdmin(connection);
+            // 创建habse管理器，由其专门处理DDL类的语言。
+            // 这种方法在0.98后已经不再使用了，换成了conf.getAdmin()了
+            // hBaseAdmin = new HBaseAdmin(connection);
+            admin = connection.getAdmin();
             // 校验表是否存在
-            if(hBaseAdmin.tableExists(bytes)){
+            if(admin.tableExists(TableName.valueOf(tableName))){
+                myLog.error("表已经存在了！");
                 System.err.println(tableName+"已经存在，创建失败！");
             }else{
                 // 创建表
-                HTableDescriptor tableDescriptor = new HTableDescriptor(bytes);
+                HTableDescriptor tableDescriptor = new HTableDescriptor(TableName.valueOf(tableName));
                 // 往表中添加列
                 tableDescriptor.addFamily(new HColumnDescriptor(columnFamily1));
                 tableDescriptor.addFamily(new HColumnDescriptor(columnFamily2));
                 // 开始真正执行创建表，也是懒加载
-                hBaseAdmin.createTable(tableDescriptor);
+                admin.createTable(tableDescriptor);
                 f= true;
             }
 
@@ -69,11 +75,14 @@ public class MyDDL {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                admin.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return f;
     }
 
-    public static void main(String[] args){
-        myCreateTable();
-    }
 }

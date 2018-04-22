@@ -36,10 +36,19 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
+
+        <!-- 这两个是为了方便的实现日子解耦功能的 -->
+        <!-- log4j -->
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
+        </dependency>
+        <!--commons-logging-->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
         </dependency>
 
         <dependency>
