@@ -40,6 +40,7 @@ import java.net.URI;
  *
  * 目前已知的bug:网上的好多版本较老，很多方法都已经要被抛弃掉了，最好找来源码看看
  *
+ * 这个好像会往本地写一堆的jar包和日志
  * @author huabingood@qq.com
  */
 public class BulkLoadJob {
@@ -130,7 +131,7 @@ public class BulkLoadJob {
             HTable hTable = new HTable(configuration,"hfiletable");
             HFileOutputFormat2.configureIncrementalLoad(job, hTable);
 
-            // 如果任务完成后，就开始加载数据
+            // 如果map任务完成后，就开始加载数据
             if(job.waitForCompletion(true)){
                 LoadIncrementalHFiles loader = new LoadIncrementalHFiles(configuration);
                 loader.doBulkLoad(path,hTable);

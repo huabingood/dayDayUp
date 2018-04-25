@@ -85,15 +85,15 @@ function show_pid(){
 case ${input} in
     1)
     start_all
-    start_spark
-    start_hbase
-    show_pid
+    # start_spark
+    # start_hbase
+    # show_pid
     ;;
     2)
     stop_hbase
-    stop_spark
-    stop_all
-    show_pid
+    # stop_spark
+    # stop_all
+    # show_pid
     ;;
     *)
     echo "You give me the error input information."
